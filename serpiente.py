@@ -9,14 +9,15 @@ pygame.init()
 window = pygame.display.set_mode((720, 480))
 pygame.display.set_caption('Snake Game')
 
-# Definición de colores
+# Colores
 black = pygame.Color(0, 0, 0)
 white = pygame.Color(255, 255, 255)
 red = pygame.Color(255, 0, 0)
 green = pygame.Color(0, 255, 0)
 blue = pygame.Color(0, 0, 255)
+yellow = pygame.Color(255, 255, 0)
 
-# Definición de velocidad del juego
+# Velocidad del juego
 snake_speed = 15
 
 # Controlador de cuadros por segundo (FPS)
@@ -32,15 +33,13 @@ def show_score(choice, color, font, size):
 # Función para el fin del juego
 def game_over():
     my_font = pygame.font.SysFont('times new roman', 50)
-    game_over_surface = my_font.render('Tu puntaje es : ' + str(score), True, red)
+    game_over_surface = my_font.render('Tu puntaje fue : ' + str(score), True, red)
     game_over_rect = game_over_surface.get_rect()
     game_over_rect.midtop = (360, 15)
     window.blit(game_over_surface, game_over_rect)
 
     # Agregar opciones para reiniciar o salir
     replay_font = pygame.font.SysFont('times new roman', 30)
-
-    # Presiona R para reiniciar o Q para salir del juego.
     replay_surface = replay_font.render('Presiona R para Reiniciar o Q para Salir.', True, white)
     replay_rect = replay_surface.get_rect()
     replay_rect.midtop = (360, 200)
@@ -70,7 +69,7 @@ def main():
     fruit_pos = [random.randrange(1, 72) * 10, random.randrange(1, 48) * 10]
     fruit_spawn = True
 
-    # Configuración de dirección
+    # Dirección inicial
     direction = 'RIGHT'
     change_to = direction
 
@@ -90,7 +89,7 @@ def main():
                 if event.key == pygame.K_RIGHT:
                     change_to = 'RIGHT'
 
-        # Si dos teclas presionadas al mismo tiempo
+        # Cambiar dirección de la serpiente
         if change_to == 'UP' and direction != 'DOWN':
             direction = 'UP'
         if change_to == 'DOWN' and direction != 'UP':
@@ -100,7 +99,7 @@ def main():
         if change_to == 'RIGHT' and direction != 'LEFT':
             direction = 'RIGHT'
 
-        # Movimiento de la serpiente
+        # Mover la serpiente
         if direction == 'UP':
             snake_pos[1] -= 10
         if direction == 'DOWN':
@@ -110,7 +109,7 @@ def main():
         if direction == 'RIGHT':
             snake_pos[0] += 10
 
-        # Cuerpo de la serpiente crece
+        # Aumentar el cuerpo de la serpiente
         snake_body.insert(0, list(snake_pos))
 
         # Si la serpiente come la fruta
@@ -121,7 +120,7 @@ def main():
         else:
             snake_body.pop()
 
-        # Si la fruta fue comida
+        # Si la fruta fue comido
         if not fruit_spawn:
             fruit_pos = [random.randrange(1, 72) * 10, random.randrange(1, 48) * 10]
         fruit_spawn = True
@@ -133,8 +132,8 @@ def main():
         for pos in snake_body:
             pygame.draw.rect(window, green, pygame.Rect(pos[0], pos[1], 10, 10))
 
-        # Dibujar la fruta
-        pygame.draw.rect(window, white, pygame.Rect(fruit_pos[0], fruit_pos[1], 10, 10))
+        # Dibujar la fruta como un círculo
+        pygame.draw.circle(window, white, (fruit_pos[0]+5, fruit_pos[1]+5), 5)
 
         # Mostrar el puntaje
         show_score(1, white, 'times new roman', 20)
